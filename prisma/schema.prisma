@@ -6,7 +6,7 @@
 
 datasource db {
   provider = "mysql"
-  url      = "mysql://halo:Daphne_328@localhost:3306/newbie_project?schema=public" //env("DATABASE_URL")
+  url      = env("DATABASE_URL")
 }
 
 generator client {
