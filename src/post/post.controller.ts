@@ -41,8 +41,8 @@ export class PostController {
     await this.postService.updatePost(Number(id), body);
   }
 
-  @Get('/search:name')
+  @Get('/search/:name')
   async searchPostByName(@Param('name') name: string) {
-    await this.postService.getByString(name);
+    return this.postService.getByString(name);
   }
 }
