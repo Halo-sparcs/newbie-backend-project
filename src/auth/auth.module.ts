@@ -11,6 +11,7 @@ import { LogRepository } from '../log/log.repository';
 import { PostService } from '../post/post.service';
 import { PostRepository } from '../post/post.repository';
 import { PrismaService } from '../../prisma/prisma.service';
+import { IsUserGuard } from './guards/isUser.guard';
 import * as process from 'node:process';
 
 @Module({
@@ -31,7 +32,9 @@ import * as process from 'node:process';
     PostService,
     PostRepository,
     JwtStrategy,
+    IsUserGuard,
   ],
   controllers: [AuthController],
+  exports: [IsUserGuard],
 })
 export class AuthModule {}

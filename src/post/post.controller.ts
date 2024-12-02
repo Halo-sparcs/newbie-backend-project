@@ -20,15 +20,15 @@ export class PostController {
 
   @UseGuards(IsUserGuard)
   @Post('/create')
-  async createPost(@Body() body: createPostDto): Promise<void> {
-    await this.postService.createPost(body);
+  async createPost(@Body() body: createPostDto) {
+    return this.postService.createPost(body);
   }
 
   @UseGuards(AuthorGuard)
   @SetMetadata('resourceType', 'post')
-  @Delete('/delete')
+  @Delete('delete/:id')
   async deletePost(@Param('id') id: number) {
-    await this.postService.deletePost(id);
+    await this.postService.deletePost(Number(id));
   }
 
   @UseGuards(AuthorGuard)
@@ -38,7 +38,7 @@ export class PostController {
     @Param('id') id: number,
     @Body() body: updatePostDto,
   ): Promise<void> {
-    await this.postService.updatePost(id, body);
+    await this.postService.updatePost(Number(id), body);
   }
 
   @Get('/search:name')

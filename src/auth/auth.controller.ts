@@ -51,11 +51,14 @@ export class AuthController {
   }
 
   @UseGuards(IsUserGuard)
-  @Post('logout')
+  @Get('logout')
   async logout(@Body() body, @Res() res: Response) {
     await this.authService.logout(body.user_id);
+    console.log('done');
     res.clearCookie('access_token');
     res.clearCookie('refresh_token');
+
+    res.json({ success: true });
   }
 
   @Get('refresh')

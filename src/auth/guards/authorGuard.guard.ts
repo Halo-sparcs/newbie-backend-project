@@ -2,13 +2,15 @@ import {
   Injectable,
   ExecutionContext,
   ForbiddenException,
-  NotFoundException, UnauthorizedException,
+  NotFoundException,
+  UnauthorizedException,
 } from '@nestjs/common';
 import { Reflector } from '@nestjs/core';
 import { PostService } from '../../post/post.service';
 import { ReviewService } from '../../review/review.service';
 import { LogService } from '../../log/log.service';
 import { AuthGuard } from '@nestjs/passport';
+import { UsersService } from '../../users/users.service';
 
 @Injectable()
 export class AuthorGuard extends AuthGuard('jwt') {
@@ -17,14 +19,25 @@ export class AuthorGuard extends AuthGuard('jwt') {
     private readonly postService: PostService,
     private readonly reviewService: ReviewService,
     private readonly logService: LogService,
+    private readonly userService: UsersService,
   ) {
     super();
   }
 
   async canActivate(context: ExecutionContext): Promise<boolean> {
+    const canActivate = await super.canActivate(context);
+    if (!canActivate) {
+      throw new ForbiddenException('인증 실패');
+    }
+
     const request = context.switchToHttp().getRequest();
-    const user = request.user;
+    const userinfo = request.user;
     const resourceId = request.params.id;
+
+    if (userinfo === null) {
+      throw new ForbiddenException('InvalidUser');
+    }
+    const user = await this.userService.getByUserId(userinfo.user_id);
 
     if (!resourceId || !user) {
       throw new ForbiddenException('유효하지 않은 요청입니다.');

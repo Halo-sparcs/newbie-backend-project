@@ -6,8 +6,8 @@ import { createPostDto, updatePostDto } from './post.dto';
 export class PostService {
   constructor(private postRepository: PostRepository) {}
 
-  async createPost(createPostDto: createPostDto): Promise<void> {
-    await this.postRepository.createPost(createPostDto);
+  async createPost(createPostDto: createPostDto) {
+    return this.postRepository.createPost(createPostDto);
   }
 
   async deletePost(id: number) {
@@ -19,7 +19,7 @@ export class PostService {
   }
 
   async getById(id: number) {
-    return this.postRepository.getById(id);
+    return this.postRepository.getById(Number(id));
   }
 
   async getByString(content: string) {

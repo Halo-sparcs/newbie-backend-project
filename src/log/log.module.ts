@@ -7,10 +7,12 @@ import { LogController } from './log.controller';
 import { LogRepository } from './log.repository';
 import { ReviewService } from '../review/review.service';
 import { ReviewRepository } from '../review/review.repository';
+import { UsersService } from '../users/users.service';
+import { UsersRepository } from '../users/users.repository';
 
 @Module({
   imports: [],
   controllers: [LogController],
-  providers: [LogService, LogRepository, PostService, PostRepository, PrismaService, ReviewService, ReviewRepository],
+  providers: [LogService, LogRepository, PostService, PostRepository, PrismaService, ReviewService, ReviewRepository, UsersService, UsersRepository],
 })
 export class LogModule {}

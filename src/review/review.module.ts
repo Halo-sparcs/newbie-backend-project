@@ -8,10 +8,12 @@ import { PostRepository } from '../post/post.repository';
 import { LogModule } from '../log/log.module';
 import { LogService } from '../log/log.service';
 import { LogRepository } from '../log/log.repository';
+import { UsersService } from '../users/users.service';
+import { UsersRepository } from '../users/users.repository';
 
 @Module({
   imports: [LogModule],
   controllers: [ReviewController],
-  providers: [ReviewService, ReviewRepository, PrismaService, PostService, PostRepository, LogService, LogRepository],
+  providers: [ReviewService, ReviewRepository, PrismaService, PostService, PostRepository, LogService, LogRepository, UsersRepository, UsersService],
 })
 export class ReviewModule {}
