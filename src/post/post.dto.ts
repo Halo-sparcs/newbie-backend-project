@@ -1,6 +1,8 @@
 import { IsString, IsNumber } from 'class-validator';
 
 export class createPostDto {
+  @IsNumber()
+  owner: number;
   @IsString()
   title: string;
   @IsString()
@@ -16,8 +18,6 @@ export class updatePostDto {
   title: string;
   @IsString()
   content: string;
-  @IsString()
-  image: string;
   @IsNumber()
   amount: number;
 }

@@ -5,8 +5,7 @@ export class loginDto {
   @MinLength(4)
   @MaxLength(20)
   user_id: string;
-  @IsString();
+  @IsString()
   @MinLength(4)
-  @MaxLength(20)
   user_pwd: string;
 }

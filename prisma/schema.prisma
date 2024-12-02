@@ -22,12 +22,46 @@ model Users {
   score Float?
   contact String
   place String?
+  refreshToken String?
+
+  myposts Posts[] @relation(name: "myposts")
+  reviews Review[] @relation(name: "reviewofuser")
+  targeted_review Review[] @relation(name: "targetedreview")
+  borrowing Log[] @relation(name: "borrowing")
 }
 
 model Posts {
   id Int @id @default(autoincrement())
   title String
   content String
-  owner Int
+  image String
+  owner Users @relation(fields: [ownerId], references: [id], name: "myposts", onDelete: Cascade)
+  ownerId Int
   amount Int
+  logs Log[] @relation("logofpost")
+}
+
+model Log {
+  id Int @id @default(autoincrement())
+  post Posts @relation(fields: [post_id], references: [id], name: "logofpost")
+  post_id Int
+  amount Int
+  borrower Users @relation(fields: [borrower_id], references: [id], name: "borrowing")
+  borrower_id Int
+  borrowed_at DateTime @default(now())
+  returned_at DateTime?
+
+  reviews Review[] @relation("reviewoflogx")
+}
+
+model Review {
+  id Int @id @default(autoincrement())
+  log Log @relation(fields: [log_id], references: [id], name: "reviewoflogx")
+  log_id Int
+  rate Int
+  comment String
+  reviewer Users @relation(fields: [reviewer_id], references: [id], name: "reviewofuser")
+  reviewer_id Int
+  target Users @relation(fields: [target_id], references: [id], name: "targetedreview")
+  target_id Int
 }

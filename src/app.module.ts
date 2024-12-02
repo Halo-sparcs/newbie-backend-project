@@ -9,12 +9,36 @@ import { PostService } from './post/post.service';
 import { PostModule } from './post/post.module';
 import { PrismaService } from '../prisma/prisma.service';
 import { PrismaModule } from '../prisma/prisma.module';
+import { UsersRepository } from './users/users.repository';
+import { PostRepository } from './post/post.repository';
+import { LogRepository } from './log/log.repository';
+import { LogService } from './log/log.service';
+import { ReviewRepository } from './review/review.repository';
+import { ReviewService } from './review/review.service';
+import { ReviewModule } from './review/review.module';
+import { LogModule } from './log/log.module';
 
 @Module({
-  imports: [AuthModule, UsersModule, PostModule, PrismaModule],
   controllers: [AppController, PostController],
-  providers: [AppService, UsersService, PostService, PrismaService],
+  imports: [
+    AuthModule,
+    UsersModule,
+    PostModule,
+    PrismaModule,
+    LogModule,
+    ReviewModule,
+  ],
+  providers: [
+    AppService,
+    UsersService,
+    PostService,
+    PrismaService,
+    UsersRepository,
+    PostRepository,
+    LogService,
+    LogRepository,
+    ReviewService,
+    ReviewRepository,
+  ],
 })
-export class AppModule {
-
-}
+export class AppModule {}
