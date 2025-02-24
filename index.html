@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Search Website</title>
+  <link rel="stylesheet" href="home.css">
+</head>
+<body>
+  <header>
+    <a href="index.html" class="logo">Newbie-Project</a>
+    <div class="auth-buttons">
+      <button class="btn" onclick="window.location.href='login/index.html'">Sign In</button>
+      <button class="btn" onclick="window.location.href='login/index.html'">Register</button>
+    </div>
+  </header>
+  <main>
+    <div class="search-container">
+      <div class="search-bar">
+        <div class="search-mode-switch">
+          <label for="search-mode">Search:</label>
+          <select id="search-mode">
+            <option value="post">Post</option>
+            <option value="user">User</option>
+          </select>
+        </div>
+        <input type="text" id="search-input" placeholder="Search post...">
+        <button id="search-button" class="btn search-btn">Search</button>
+      </div>
+      <div class="search-info">
+        <p>Search for users or posts across our platform.</p>
+        <p>Use the dropdown menu to switch between user and post search modes.</p>
+      </div>
+    </div>
+  </main>
+  <script src="home.js"></script>
+</body>
+</html>

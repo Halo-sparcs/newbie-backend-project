@@ -1,0 +1,157 @@
+/* Global Styles */
+body {
+    margin: 0;
+    font-family: Arial, sans-serif;
+    background-color: #f8f9fa;
+}
+
+/* Header & Logo */
+header {
+    display: flex;
+    align-items: center;
+    padding: 1rem 2rem;
+    background-color: #fff;
+    border-bottom: 1px solid #dee2e6;
+}
+.logo {
+    font-size: 1.8rem;
+    font-weight: bold;
+    color: #007bff;
+    text-decoration: none;
+    cursor: pointer;
+}
+
+/* Container */
+.container {
+    width: 90%;
+    max-width: 1200px;
+    margin: 2rem auto;
+}
+
+/* Search Container */
+.search-container {
+    width: 100%;
+    max-width: 800px;
+    background-color: #fff;
+    padding: 2rem;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+    margin-bottom: 2rem;
+}
+
+/* Search Bar */
+.search-bar {
+    display: flex;
+    align-items: center;
+    background-color: #f1f3f5;
+    border-radius: 4px;
+    overflow: hidden;
+    border: 1px solid #ced4da;
+    height: 3.5rem;
+}
+.search-mode-switch {
+    display: flex;
+    align-items: center;
+    padding: 0 1rem;
+    border-right: 1px solid #ced4da;
+    background-color: #e9ecef;
+}
+.search-mode-switch label {
+    margin-right: 0.75rem;
+    font-size: 1.1rem;
+    color: #495057;
+}
+.search-mode-switch select {
+    padding: 0.5rem;
+    font-size: 1.1rem;
+    border: none;
+    background: transparent;
+    outline: none;
+    appearance: none;
+    cursor: pointer;
+}
+.search-bar input[type="text"] {
+    padding: 0.5rem 1rem;
+    font-size: 1.2rem;
+    border: none;
+    outline: none;
+    flex-grow: 1;
+}
+.search-bar .search-btn {
+    padding: 0.5rem 1.5rem;
+    font-size: 1.2rem;
+    background-color: #007bff;
+    color: #fff;
+    border: none;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+.search-bar .search-btn:hover {
+    background-color: #0069d9;
+}
+.search-info {
+    margin-top: 1rem;
+    text-align: center;
+    color: #6c757d;
+}
+
+/* Posts List */
+.post-list {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 1rem;
+}
+.post-item {
+    background-color: #fff;
+    padding: 1rem;
+    border: 1px solid #dee2e6;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: box-shadow 0.3s ease;
+}
+.post-item:hover {
+    box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+}
+.post-title {
+    font-size: 1.2rem;
+    font-weight: bold;
+    margin-bottom: 0.5rem;
+}
+.post-owner {
+    font-size: 1rem;
+    color: #6c757d;
+    margin-bottom: 0.5rem;
+}
+.post-content {
+    font-size: 1rem;
+    margin-bottom: 0.5rem;
+}
+.post-amount {
+    font-size: 1rem;
+    font-weight: bold;
+    color: #007bff;
+}
+
+/* Placeholder: 빈 post-item은 보이지 않지만 레이아웃 공간은 유지 */
+.post-item.placeholder {
+    visibility: hidden;
+}
+
+/* Pagination */
+.pagination {
+    display: flex;
+    justify-content: center;
+    margin-top: 2rem;
+}
+.pagination a {
+    margin: 0 0.5rem;
+    padding: 0.5rem 1rem;
+    text-decoration: none;
+    color: #007bff;
+    border: 1px solid #dee2e6;
+    border-radius: 4px;
+    cursor: pointer;
+}
+.pagination a:hover {
+    background-color: #e9ecef;
+}

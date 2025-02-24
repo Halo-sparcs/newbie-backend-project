@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <title>Search Post</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <!-- 상단 로고 -->
+  <header>
+    <a href="../index.html" class="logo">newbie-project</a>
+  </header>
+
+  <!-- Search Bar -->
+  <div class="container">
+    <div class="search-container">
+      <div class="search-bar">
+        <div class="search-mode-switch">
+          <label for="search-mode">Search:</label>
+          <select id="search-mode">
+            <option value="post">Post</option>
+            <option value="user">User</option>
+          </select>
+        </div>
+        <input type="text" id="search-input" placeholder="Search post...">
+        <button id="search-button" class="btn search-btn">Search</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Post 목록 (한 페이지에 9개의 Post) -->
+  <div class="container">
+    <div class="post-list" id="post-list">
+      <!-- 게시글은 script.js에서 동적으로 렌더링됩니다. -->
+    </div>
+  </div>
+
+  <!-- Pagination (이전, 다음 버튼만 표시) -->
+  <div class="container">
+    <div class="pagination" id="pagination">
+      <!-- script.js에서 이전, 다음 버튼을 생성합니다. -->
+    </div>
+  </div>
+
+  <script src="script.js"></script>
+</body>
+</html>

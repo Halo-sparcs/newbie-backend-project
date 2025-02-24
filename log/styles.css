@@ -1,0 +1,70 @@
+/* 기본 스타일 */
+body {
+    margin: 0;
+    font-family: Arial, sans-serif;
+    background-color: #f8f9fa;
+  }
+  
+  header {
+    background-color: #fff;
+    padding: 1rem 2rem;
+    border-bottom: 1px solid #dee2e6;
+    display: flex;
+    align-items: center;
+  }
+  .logo {
+    font-size: 1.8rem;
+    font-weight: bold;
+    color: #007bff;
+    text-decoration: none;
+    margin-right: 1rem;
+  }
+  header h1 {
+    font-size: 1.5rem;
+    color: #333;
+  }
+  
+  .container {
+    max-width: 1200px;
+    margin: 2rem auto;
+    padding: 0 1rem;
+  }
+  
+  /* 로그 컬럼들을 3단으로 배치 */
+  .logs-wrapper {
+    display: flex;
+    gap: 1rem;
+  }
+  .logs-column {
+    flex: 1;
+    background-color: #fff;
+    padding: 1rem;
+    border: 1px solid #dee2e6;
+    border-radius: 8px;
+    height: 600px; /* 원하는 높이 지정 */
+    overflow-y: auto;
+  }
+  .logs-column h2 {
+    text-align: center;
+    margin-bottom: 1rem;
+  }
+  
+  /* 로그 항목 스타일 */
+  .log-item {
+    border-bottom: 1px solid #ccc;
+    padding: 0.5rem 0;
+  }
+  .log-item:last-child {
+    border-bottom: none;
+  }
+  .log-info {
+    margin-bottom: 0.5rem;
+    font-size: 0.9rem;
+  }
+  .log-buttons button {
+    margin-right: 0.5rem;
+    padding: 0.3rem 0.6rem;
+    font-size: 0.8rem;
+    cursor: pointer;
+  }
+  

@@ -1,0 +1,90 @@
+/* 기본 스타일 */
+body {
+  margin: 0;
+  font-family: Arial, sans-serif;
+  background-color: #f8f9fa;
+}
+
+/* 헤더 및 로고 */
+header {
+  background-color: #fff;
+  padding: 1rem 2rem;
+  border-bottom: 1px solid #dee2e6;
+}
+.logo {
+  font-size: 1.8rem;
+  font-weight: bold;
+  color: #007bff;
+  text-decoration: none;
+}
+
+/* 컨테이너 */
+.container {
+  max-width: 800px;
+  margin: 2rem auto;
+  background-color: #fff;
+  padding: 2rem;
+}
+
+/* 포스트 상세 영역 */
+#post-detail {
+  margin-bottom: 2rem;
+}
+#post-detail h2 {
+  margin-bottom: 0.5rem;
+}
+#post-detail p {
+  margin: 0.5rem 0;
+}
+#post-detail img {
+  max-width: 100%;
+  height: auto;
+  margin: 1rem 0;
+}
+
+/* 대여 요청 영역 */
+#rental-request {
+  border-top: 1px solid #dee2e6;
+  padding-top: 1rem;
+}
+#rental-request input[type="number"] {
+  width: 100px;
+  padding: 0.5rem;
+  margin-right: 1rem;
+}
+#rental-request button {
+  padding: 0.5rem 1rem;
+  background-color: #007bff;
+  color: #fff;
+  border: none;
+  cursor: pointer;
+}
+#rental-request button:hover {
+  background-color: #0069d9;
+}
+
+/* 편집 모드 form 스타일 */
+#edit-form div {
+  margin-bottom: 1rem;
+}
+#edit-form label {
+  display: inline-block;
+  width: 80px;
+}
+#edit-form input, #edit-form textarea {
+  width: calc(100% - 90px);
+  padding: 0.5rem;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+}
+#edit-form button {
+  padding: 0.5rem 1rem;
+  margin-right: 1rem;
+  background-color: #007bff;
+  color: #fff;
+  border: none;
+  cursor: pointer;
+}
+#edit-form button:hover {
+  background-color: #0056b3;
+}

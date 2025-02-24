@@ -1,0 +1,107 @@
+/* Reset */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+  }
+  
+  /* Header 및 로고 */
+  header {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    padding: 1rem 2rem;
+    background: #fff;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    z-index: 1000;
+  }
+  .logo {
+    font-size: 1.8rem;
+    font-weight: bold;
+    color: #007bff;
+    text-decoration: none;
+  }
+  
+  /* Body 배경 (header는 fixed 이므로 body flex는 인증 박스에만 적용) */
+  body {
+    font-family: Arial, sans-serif;
+    background: #f0f2f5;
+    margin: 0;
+  }
+  
+  /* 인증 박스를 감싸는 wrapper */
+  .auth-wrapper {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+  }
+  
+  /* 인증 박스 */
+  .auth-container {
+    background: #fff;
+    padding: 2rem;
+    width: 350px;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+    margin-top: 80px; /* header 높이만큼 띄움 */
+  }
+  
+  /* 토글 버튼 영역 */
+  .auth-switch {
+    display: flex;
+    justify-content: center;
+    margin-bottom: 1.5rem;
+  }
+  .auth-switch button {
+    flex: 1;
+    padding: 0.75rem;
+    border: none;
+    background: #e0e0e0;
+    color: #333;
+    cursor: pointer;
+    transition: background 0.3s;
+  }
+  .auth-switch button.active {
+    background: #007bff;
+    color: #fff;
+  }
+  
+  /* 폼 스타일 */
+  .auth-form h2 {
+    text-align: center;
+    margin-bottom: 1.5rem;
+    color: #333;
+  }
+  .form-group {
+    margin-bottom: 1rem;
+  }
+  .form-group label {
+    display: block;
+    margin-bottom: 0.25rem;
+    color: #555;
+  }
+  .form-group input {
+    width: 100%;
+    padding: 0.5rem;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+  }
+  
+  /* 제출 버튼 */
+  .btn {
+    width: 100%;
+    padding: 0.75rem;
+    border: none;
+    background: #007bff;
+    color: #fff;
+    font-size: 1rem;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: background 0.3s;
+  }
+  .btn:hover {
+    background: #0056b3;
+  }
+  
