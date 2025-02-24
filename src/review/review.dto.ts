@@ -20,8 +20,6 @@ export class createReviewDto {
   @IsString()
   comment: string;
   @IsNumber()
-  reviewer_id: number;
-  @IsNumber()
   target_id: number;
 }
 

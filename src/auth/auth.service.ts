@@ -1,9 +1,10 @@
-import { Injectable, UnauthorizedException } from '@nestjs/common';
+import { Injectable, UnauthorizedException, BadRequestException } from '@nestjs/common';
 import { UsersRepository } from '../users/users.repository';
 import { loginDto } from './auth.dto';
 import { JwtService } from '@nestjs/jwt';
 
 import { LogService } from '../log/log.service';
+import { BorrowService } from '../borrow/borrow.service';
 import { UsersService } from '../users/users.service';
 import * as bcrypt from 'bcrypt';
 
@@ -13,13 +14,20 @@ export class AuthService {
     private readonly jwtService: JwtService,
     private readonly UsersRepository: UsersRepository,
     private readonly logService: LogService,
+    private readonly borrowService: BorrowService,
     private readonly userService: UsersService,
   ) {}
 
   async login(loginDto: loginDto) {
-    const isUser = this.validateUser(loginDto);
+    const isUser = await this.validateUser(loginDto);
 
-    const accessToken = isUser ? await this.createAccessToken(loginDto) : 'False';
+    if (!isUser) {
+      throw new BadRequestException("wrong login credentials");
+    }
+
+    const accessToken = isUser
+      ? await this.createAccessToken(loginDto)
+      : 'False';
     const refreshToken = await this.createRefreshToken(loginDto);
 
     return { accessToken, refreshToken };
@@ -34,12 +42,12 @@ export class AuthService {
       const user = await this.userService.getByUserId(payload.user_id);
 
       if (user === null) {
-        throw new UnauthorizedException('Wrong Payload');
+        throw new BadRequestException('Wrong Payload');
       }
 
       const isMatch = refreshToken === user.refreshToken;
       if (!isMatch) {
-        throw new UnauthorizedException('Invalid refresh token');
+        throw new BadRequestException('Invalid refresh token');
       }
 
       const newAccessToken = await this.createAccessToken({
@@ -52,18 +60,20 @@ export class AuthService {
     }
   }
 
-  async logout(user_id: string) {
-    const user = await this.UsersRepository.getByUserId(user_id);
-    const result = await this.UsersRepository.updateUserRefreshToken(user.id, null);
+  async logout(user_id: number) {
+    const result = await this.UsersRepository.updateUserRefreshToken(
+      user_id,
+      null,
+    );
     console.log(result.refreshToken);
   }
 
   async withdraw(id: number) {
-    const notReturned = await this.logService.getByOwnerId(id);
+    const notReturned = await this.borrowService.getByOwner(0, id);
     if (notReturned.length >= 1) {
       throw new Error('You got unreturned items');
     }
-    const borrowing = await this.logService.getByBorrowerId(id);
+    const borrowing = await this.logService.getByBorrowerId(0, id);
     if (borrowing.length >= 1) {
       throw new Error("You didn't returned items");
     }
@@ -76,21 +86,28 @@ export class AuthService {
     const user = await this.UsersRepository.getByUserId(user_id);
     const pwdMatches = await bcrypt.compare(user_pwd, user.user_pwd);
 
-    if (!pwdMatches) {
-      throw new UnauthorizedException('Password does not match');
-    } else {
-      return true;
+    try {
+      if (!pwdMatches) {
+        throw new UnauthorizedException('Password does not match');
+      } else {
+        return true;
+      }
+    }
+    catch (e) {
+      return false;
     }
   }
 
   async createAccessToken(user: loginDto) {
+    const userInfo = await this.userService.getByUserId(user.user_id);
+
     const payload = {
+      id: userInfo.id,
       user_id: user.user_id,
-      user_pwd: user.user_pwd,
     };
 
     const options = {
-      expiresIn: '15m',
+      expiresIn: '2h',
       secret: process.env.JWT_SECRET,
     };
 
@@ -99,13 +116,15 @@ export class AuthService {
   }
 
   async createRefreshToken(info: loginDto) {
+    const userInfo = await this.userService.getByUserId(info.user_id);
+
     const payload = {
+      id: userInfo.id,
       user_id: info.user_id,
-      user_pwd: info.user_pwd,
     };
 
     const options = {
-      expiresIn: '6h',
+      expiresIn: '8h',
       secret: process.env.JWT_REFRESH_SECRET,
     };
 

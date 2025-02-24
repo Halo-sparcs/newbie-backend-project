@@ -18,10 +18,8 @@ model Users {
   user_id String @unique
   user_pwd String
   username String @unique
-  banned Boolean @default(false)
   score Float?
   contact String
-  place String?
   refreshToken String?
 
   myposts Posts[] @relation(name: "myposts")
@@ -39,6 +37,8 @@ model Posts {
   ownerId Int
   amount Int
   logs Log[] @relation("logofpost")
+
+  borrowlist Borrow[] @relation(name: "postofborrower")
 }
 
 model Log {
@@ -48,6 +48,7 @@ model Log {
   amount Int
   borrower Users @relation(fields: [borrower_id], references: [id], name: "borrowing")
   borrower_id Int
+  owner_id Int
   borrowed_at DateTime @default(now())
   returned_at DateTime?
 
@@ -64,4 +65,22 @@ model Review {
   reviewer_id Int
   target Users @relation(fields: [target_id], references: [id], name: "targetedreview")
   target_id Int
+}
+
+model Borrow {
+  id Int @id @default(autoincrement())
+  borrower_id Int
+  post Posts @relation(fields: [post_id], references: [id], name: "postofborrower")
+  post_id Int
+  owner_id Int
+  amount Int
+  apply_at DateTime @default(now())
+}
+
+model Return {
+   id Int @id @default(autoincrement())
+   borrower_id Int
+   log_id Int
+   owner_id Int
+   apply_at DateTime @default(now())
 }

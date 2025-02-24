@@ -1,45 +1,45 @@
 import { Injectable } from '@nestjs/common';
 import { LogRepository } from './log.repository';
 import { createLogDto } from './log.dto';
-import { PostService } from '../post/post.service';
+import { Log } from '@prisma/client';
 
 @Injectable()
 export class LogService {
-  constructor(
-    private readonly logRepository: LogRepository,
-    private readonly postService: PostService,
-  ) {}
+  constructor(private readonly logRepository: LogRepository) {}
 
-  // it is also a createLog.
-  async lend(createLogDto: createLogDto) {
-    const post = await this.postService.getById(createLogDto.post_id);
-    if (post.amount < createLogDto.amount) {
-      throw new Error('Requested amount exceeds remaining');
-    }
-    post.amount -= createLogDto.amount;
-    const log = await this.logRepository.createLog(createLogDto);
-    post.logs.push(log);
-    await this.postService.updatePost(post.id, post);
+  async createLog(dto: createLogDto): Promise<void> {
+    await this.logRepository.createLog(dto);
   }
 
-  async getByBorrowerId(borrower_id: number) {
-    return this.logRepository.getByBorrowerId(borrower_id);
+  async updateLog(id: number): Promise<void> {
+    await this.logRepository.updateLog(id);
   }
 
-  async getByOwnerId(owner_id: number) {
-    return this.logRepository.getByOwnerId(owner_id);
-  }
-
-  async getById(id: number) {
+  async getLogById(id: number): Promise<Log> {
     return this.logRepository.getById(id);
   }
 
-  async return(log_id: number) {
-    const log = await this.logRepository.getById(log_id);
-    const postId = log.post_id;
-    const post = await this.postService.getById(postId);
-    post.amount += log.amount;
-    await this.postService.updatePost(postId, post);
-    return this.logRepository.return(log_id);
+  // async alertLog(user_id: number): Promise<Log[]> {
+  //   const borrowedList = await this.logRepository.getByBorrowerId(user_id);
+  //
+  //   const now = new Date();
+  //
+  //   const past = new Date(now);
+  //   past.setDate(now.getDate() - 6);
+  //
+  //   const filteredList = borrowedList.filter((request) => {
+  //     const borrowedAt = new Date(request.borrowed_at);
+  //     return borrowedAt <= past; // if borrowedAt is much more past than past, alert.
+  //   });
+  //
+  //   return filteredList;
+  // }
+
+  async getByBorrowerId(last_id: number, id: number): Promise<Log[]> {
+    return this.logRepository.getByBorrowerId(last_id, id);
+  }
+
+  async getAll() {
+    return this.logRepository.getAll();
   }
 }

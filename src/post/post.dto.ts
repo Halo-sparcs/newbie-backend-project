@@ -1,8 +1,6 @@
 import { IsString, IsNumber } from 'class-validator';
 
 export class createPostDto {
-  @IsNumber()
-  owner: number;
   @IsString()
   title: string;
   @IsString()

@@ -15,6 +15,9 @@ import { UsersService } from '../users/users.service';
 import { loginDto } from './auth.dto';
 import { IsUserGuard } from './guards/isUser.guard';
 import { Request, Response } from 'express';
+import { Logger } from '@nestjs/common';
+
+const logger = new Logger('UsersController');
 
 @Controller('auth')
 export class AuthController {
@@ -47,13 +50,14 @@ export class AuthController {
 
   @Post('SignUp')
   async signup(@Body() body) {
+    logger.log(body);
     return this.userService.createUser(body);
   }
 
   @UseGuards(IsUserGuard)
   @Get('logout')
-  async logout(@Body() body, @Res() res: Response) {
-    await this.authService.logout(body.user_id);
+  async logout(@Req() req, @Res() res: Response) {
+    await this.authService.logout(req.user.user_id);
     console.log('done');
     res.clearCookie('access_token');
     res.clearCookie('refresh_token');

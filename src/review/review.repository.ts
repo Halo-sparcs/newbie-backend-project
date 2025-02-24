@@ -7,13 +7,13 @@ import { createReviewDto, updateReviewDto } from './review.dto';
 export class ReviewRepository {
   constructor(private readonly prisma: PrismaService) {}
 
-  async createReview(createReviewDto: createReviewDto) {
+  async createReview(reviewer_id: number, createReviewDto: createReviewDto) {
     return this.prisma.review.create({
       data: {
         log_id: createReviewDto.log_id,
         rate: createReviewDto.rate,
         comment: createReviewDto.comment,
-        reviewer_id: createReviewDto.reviewer_id,
+        reviewer_id: reviewer_id,
         target_id: createReviewDto.target_id,
       },
       include: {
@@ -52,18 +52,32 @@ export class ReviewRepository {
     });
   }
 
-  async getByTargetUserID(user_id: number) {
+  async getByTargetUserID(last_id: number, user_id: number) {
     return this.prisma.review.findMany({
       where: {
         target_id: user_id,
+        id: {
+          gt: last_id,
+        },
+      },
+      take: 9,
+      orderBy: {
+        id: 'asc',
       },
     });
   }
 
-  async getByReviewerUserID(user_id: number) {
+  async getByReviewerUserID(last_id: number, user_id: number) {
     return this.prisma.review.findMany({
       where: {
         reviewer_id: user_id,
+        id: {
+          gt: last_id,
+        },
+      },
+      take: 9,
+      orderBy: {
+        id: 'asc',
       },
     });
   }

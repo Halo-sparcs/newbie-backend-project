@@ -1,12 +1,10 @@
 import { IsNumber } from 'class-validator';
 
-export class createLogDto {
+export class createBorrowDto {
   @IsNumber()
   post_id: number;
   @IsNumber()
-  amount: number;
-  @IsNumber()
-  borrower_id: number;
-  @IsNumber()
   owner_id: number;
+  @IsNumber()
+  amount: number;
 }

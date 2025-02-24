@@ -1,42 +1,37 @@
 import {
   Controller,
   Get,
-  Post,
-  Body,
-  Patch,
   Param,
   UseGuards,
   SetMetadata,
 } from '@nestjs/common';
 import { LogService } from './log.service';
-import { createLogDto } from './log.dto';
 import { IsUserGuard } from '../auth/guards/isUser.guard';
-import { AuthorGuard } from '../auth/guards/authorGuard.guard';
+
+export const SetField = (fieldName: string) => SetMetadata('fieldName', fieldName);
 
 @Controller('log')
 export class LogController {
   constructor(private readonly logService: LogService) {}
 
+  @Get("all")
+  async getAll() {
+    return this.logService.getAll();
+  }
+
+  // @UseGuards(IsUserGuard)
+  // @SetField("user_id")
+  // @Get("alert/:user_id")
+  // async alertLog(@Param('user_id') user_id: number) {
+  //   return this.logService.alertLog(Number(user_id));
+  // }
+
   @UseGuards(IsUserGuard)
-  @Post('lend')
-  create(@Body() createLogDto: createLogDto) {
-    return this.logService.lend(createLogDto);
-  }
-
-  @Get('getBorrower/:borrower_id')
-  getByBorrowerId(@Param('borrower_id') borrower_id: number) {
-    return this.logService.getByBorrowerId(borrower_id);
-  }
-
-  @Get('getOwner/:owner_id')
-  getByOwnerId(@Param('owner_id') owner_id: number) {
-    return this.logService.getByOwnerId(owner_id);
-  }
-
-  @UseGuards(AuthorGuard)
-  @SetMetadata('resourceType', 'log')
-  @Patch('return/:log_id')
-  return(@Param('log_id') log_id: number) {
-    return this.logService.return(log_id);
+  @SetField("user_id")
+  @Get("left/:user_id/:last_id")
+  async leftLog(
+    @Param('user_id') user_id: number,
+    @Param('last_id') last_id: number,) {
+    return this.logService.getByBorrowerId(Number(last_id), Number(user_id));
   }
 }

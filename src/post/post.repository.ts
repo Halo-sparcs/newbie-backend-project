@@ -7,10 +7,10 @@ import { createPostDto, updatePostDto } from './post.dto';
 export class PostRepository {
   constructor(private readonly prisma: PrismaService) {}
 
-  async createPost(data: createPostDto): Promise<Posts> {
+  async createPost(user_id: number, data: createPostDto): Promise<Posts> {
     return this.prisma.posts.create({
       data: {
-        ownerId: data.owner,
+        ownerId: user_id,
         title: data.title,
         content: data.content,
         amount: data.amount,
@@ -51,12 +51,18 @@ export class PostRepository {
     };
   }
 
-  async getByString(content: string) {
+  async getByString(page: number, content: string) {
+    const skip = (page - 1) * 9;
     return this.prisma.posts.findMany({
+      skip: skip,
+      take: 9,
       where: {
         title: {
           contains: content,
         },
+      },
+      orderBy: {
+        id: 'asc',
       },
     });
   }

@@ -1,5 +1,5 @@
 import { Injectable } from '@nestjs/common';
-import { PrismaService } from '../../prisma/prisma.service';
+import { PrismaService } from '../prisma/prisma.service';
 import { Users } from '@prisma/client';
 import { createUserDto } from './users.dto';
 
@@ -65,6 +65,7 @@ export class UsersRepository {
   }
 
   async updateUserRefreshToken(id: number, refreshToken: string) {
+    console.log(refreshToken);
     return this.prisma.users.update({
       where: {
         id: id,

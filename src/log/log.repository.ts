@@ -13,6 +13,7 @@ export class LogRepository {
         post_id: createLogDto.post_id,
         amount: createLogDto.amount,
         borrower_id: createLogDto.borrower_id,
+        owner_id: createLogDto.owner_id,
       },
       include: {
         post: true,
@@ -20,62 +21,78 @@ export class LogRepository {
     });
   }
 
-  /*
-  I don't think we'll delete Logs for it (in case of calling cops)
-  async deleteLog(id: number) {
-    return this.prisma.posts.delete({
-      where: { id },
-    });
-  }
-  */
-
-  async getByBorrowerId(id: number): Promise<Log[]> {
-    return this.prisma.log.findMany({
-      where: {
-        borrower_id: id,
-      },
-    });
-  }
-
-  async getByOwnerId(
-    id: number,
-  ): Promise<{ postId: number; notReturned: boolean }[]> {
-    const posts = await this.prisma.posts.findMany({
-      where: {
-        ownerId: id,
-      },
-      include: {
-        logs: true,
-      },
-    });
-
-    return posts
-      .map((post) => {
-        const lentLog = post.logs.find((log) => log.returned_at === null);
-        return {
-          postId: post.id,
-          notReturned: !!lentLog,
-        };
-      })
-      .filter((post) => post.notReturned);
-  }
-
-  async getById(id: number) {
-    return this.prisma.log.findUnique({
-      where: {
-        id: id,
-      },
-    });
-  }
-
-  async return(id: number) {
+  async updateLog(id: number): Promise<Log> {
     return this.prisma.log.update({
-      where: {
-        id: id,
-      },
+      where: { id },
       data: {
         returned_at: new Date(),
       },
     });
   }
+
+  async getById(id: number): Promise<Log> {
+    return this.prisma.log.findUnique({
+      where: { id },
+    });
+  }
+
+  async getByBorrowerId(last_id: number, id: number): Promise<Log[]> {
+    return this.prisma.log.findMany({
+      where: {
+        id: {
+          gt: last_id,
+        },
+        borrower_id: id,
+        returned_at: null,
+      },
+      take: 9,
+      orderBy: {
+        borrowed_at: 'asc',
+      },
+    });
+  }
+
+  async getByPostId(postId: number): Promise<Log[]> {
+    return this.prisma.log.findMany({
+      where: {
+        post_id: postId,
+        returned_at: null,
+      },
+    });
+  }
+
+  async getAll() {
+    return this.prisma.log.findMany();
+  }
+
+  // async getByOwnerId(
+  //   id: number,
+  // ): Promise<{ postId: number; notReturned: boolean }[]> {
+  //   const posts = await this.prisma.posts.findMany({
+  //     where: {
+  //       ownerId: id,
+  //     },
+  //     include: {
+  //       logs: true,
+  //     },
+  //   });
+  //
+  //   return posts
+  //     .map((post) => {
+  //       const lentLog = post.logs.find((log) => log.returned_at === null);
+  //       return {
+  //         postId: post.id,
+  //         notReturned: !!lentLog,
+  //       };
+  //     })
+  //     .filter((post) => post.notReturned);
+  // }
+
+  // async getById(id: number) {
+  //   return this.prisma.log.findUnique({
+  //     where: {
+  //       id: id,
+  //     },
+  //   });
+  // }
 }

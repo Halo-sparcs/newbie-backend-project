@@ -1,18 +1,14 @@
 import { Module } from '@nestjs/common';
 import { LogService } from './log.service';
-import { PostService } from '../post/post.service';
-import { PostRepository } from '../post/post.repository';
-import { PrismaService } from '../../prisma/prisma.service';
+import { PrismaService } from 'prisma/prisma.service';
 import { LogController } from './log.controller';
 import { LogRepository } from './log.repository';
-import { ReviewService } from '../review/review.service';
-import { ReviewRepository } from '../review/review.repository';
-import { UsersService } from '../users/users.service';
-import { UsersRepository } from '../users/users.repository';
+import { PrismaModule } from 'prisma/prisma.module';
 
 @Module({
-  imports: [],
+  imports: [PrismaModule],
   controllers: [LogController],
-  providers: [LogService, LogRepository, PostService, PostRepository, PrismaService, ReviewService, ReviewRepository, UsersService, UsersRepository],
+  providers: [LogService, LogRepository, PrismaService],
+  exports: [LogRepository, LogService],
 })
 export class LogModule {}

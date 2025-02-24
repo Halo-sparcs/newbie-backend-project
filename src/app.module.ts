@@ -7,8 +7,8 @@ import { UsersModule } from './users/users.module';
 import { PostController } from './post/post.controller';
 import { PostService } from './post/post.service';
 import { PostModule } from './post/post.module';
-import { PrismaService } from '../prisma/prisma.service';
-import { PrismaModule } from '../prisma/prisma.module';
+import { PrismaService } from 'prisma/prisma.service';
+import { PrismaModule } from 'prisma/prisma.module';
 import { UsersRepository } from './users/users.repository';
 import { PostRepository } from './post/post.repository';
 import { LogRepository } from './log/log.repository';
@@ -17,6 +17,9 @@ import { ReviewRepository } from './review/review.repository';
 import { ReviewService } from './review/review.service';
 import { ReviewModule } from './review/review.module';
 import { LogModule } from './log/log.module';
+import { ReturnModule } from './return/return.module';
+import { BorrowModule } from './borrow/borrow.module';
+import { S3Module } from './s3/s3.module';
 
 @Module({
   controllers: [AppController, PostController],
@@ -27,6 +30,9 @@ import { LogModule } from './log/log.module';
     PrismaModule,
     LogModule,
     ReviewModule,
+    ReturnModule,
+    BorrowModule,
+    S3Module,
   ],
   providers: [
     AppService,

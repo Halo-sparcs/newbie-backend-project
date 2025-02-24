@@ -11,6 +11,7 @@ export class JwtStrategy extends PassportStrategy(Strategy, 'jwt') {
         (request) => {
           const tokenFromCookie = request?.cookies?.access_token || null;
           if (tokenFromCookie) return tokenFromCookie;
+          return null;
         },
       ]),
       ignoreExpiration: false,
@@ -20,6 +21,6 @@ export class JwtStrategy extends PassportStrategy(Strategy, 'jwt') {
   }
 
   async validate(payload: any) {
-    return { user_id: payload.user_id, user_pwd: payload.user_pwd };
+    return { user_id: payload.id };
   }
 }

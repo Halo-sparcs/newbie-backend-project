@@ -2,31 +2,40 @@ import { Controller, Get, Param, Put, Body, UseGuards } from '@nestjs/common';
 import { UsersService } from './users.service';
 import { createUserDto } from './users.dto';
 import { IsUserGuard } from '../auth/guards/isUser.guard';
+import { Logger } from '@nestjs/common';
+
+const logger = new Logger('UsersController');
 
 @Controller('users')
 export class UsersController {
   constructor(private readonly usersService: UsersService) {}
 
-  @UseGuards(IsUserGuard)
-  @Get(':id')
-  async getById(@Param() id: number) {
-    return await this.usersService.getById(id);
+  @Get('All')
+  async getAll() {
+    try {
+      logger.log('I got it');
+      return await this.usersService.getAll();
+    } catch (error) {
+      console.error('Error occurred in getAll:', error);
+      throw error;
+    }
   }
 
   @Get('byname/:user_name')
-  async getByUsername(@Param() user_name: string) {
-    return await this.usersService.getByName(user_name);
+  async getByUsername(@Param('user_name') user_name: string) {
+    logger.log(user_name);
+    return this.usersService.getByName(user_name);
   }
 
-  @Get('all')
-  async getAll() {
-    console.log("I got it");
-    return await this.usersService.getAll();
-  }
-
+  @Get(':id')
   @UseGuards(IsUserGuard)
+  async getById(@Param('id') id: number) {
+    return this.usersService.getById(id);
+  }
+
   @Put('update/:id')
-  async updateUser(@Param() id: number, @Body() updateData: createUserDto) {
+  @UseGuards(IsUserGuard)
+  async updateUser(@Param('id') id: number, @Body() updateData: createUserDto) {
     await this.usersService.updateUser(id, updateData);
   }
 }

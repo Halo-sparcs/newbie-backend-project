@@ -32,11 +32,16 @@ export class UsersService {
   }
 
   async getAll() {
-    return this.UsersRepository.getAll();
+    const user = await this.UsersRepository.getAll();
+    if (user === null) {
+      throw new NotFoundException(`User not found`);
+    }
+    return user;
   }
 
   async createUser(user: userDto) {
-    const hashed_pwd: string = await bcrypt.hash(user.user_pwd, 10);
+    const salt = await bcrypt.genSalt(10);
+    const hashed_pwd: string = await bcrypt.hash(user.user_pwd, salt);
     console.log(hashed_pwd);
     return this.UsersRepository.createUser({
       user_id: user.user_id,
