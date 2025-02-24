@@ -32,7 +32,9 @@ export class LogRepository {
 
   async getById(id: number): Promise<Log> {
     return this.prisma.log.findUnique({
-      where: { id },
+      where: {
+        id: Number(id),
+      },
     });
   }
 

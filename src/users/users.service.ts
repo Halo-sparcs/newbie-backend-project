@@ -39,15 +39,15 @@ export class UsersService {
     return user;
   }
 
-  async createUser(user: userDto) {
+  async createUser(user: createUserDto) {
     const salt = await bcrypt.genSalt(10);
     const hashed_pwd: string = await bcrypt.hash(user.user_pwd, salt);
     console.log(hashed_pwd);
+    console.log(user);
     return this.UsersRepository.createUser({
       user_id: user.user_id,
       user_pwd: hashed_pwd,
       contact: user.contact,
-      place: user.place,
       username: user.username,
     });
   }

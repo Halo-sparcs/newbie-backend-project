@@ -30,7 +30,5 @@ export class createUserDto {
   @MinLength(4)
   username: string;
   @IsString()
-  place: string;
-  @IsString()
   contact: string;
 }

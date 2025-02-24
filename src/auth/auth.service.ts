@@ -1,4 +1,8 @@
-import { Injectable, UnauthorizedException, BadRequestException } from '@nestjs/common';
+import {
+  Injectable,
+  UnauthorizedException,
+  BadRequestException,
+} from '@nestjs/common';
 import { UsersRepository } from '../users/users.repository';
 import { loginDto } from './auth.dto';
 import { JwtService } from '@nestjs/jwt';
@@ -22,7 +26,7 @@ export class AuthService {
     const isUser = await this.validateUser(loginDto);
 
     if (!isUser) {
-      throw new BadRequestException("wrong login credentials");
+      throw new BadRequestException('wrong login credentials');
     }
 
     const accessToken = isUser
@@ -30,7 +34,13 @@ export class AuthService {
       : 'False';
     const refreshToken = await this.createRefreshToken(loginDto);
 
-    return { accessToken, refreshToken };
+    const user = await this.userService.getByUserId(loginDto.user_id);
+
+    return {
+      id: user.id,
+      accessToken: accessToken,
+      refreshToken: refreshToken,
+    };
   }
 
   async refresh(refreshToken: string) {
@@ -92,8 +102,7 @@ export class AuthService {
       } else {
         return true;
       }
-    }
-    catch (e) {
+    } catch (e) {
       return false;
     }
   }

@@ -27,10 +27,15 @@ export class UsersController {
     return this.usersService.getByName(user_name);
   }
 
+  @Get('byuser_id/:user_id')
+  async getByUserId(@Param('user_id') user_id: string) {
+    return this.usersService.getByUserId(user_id);
+  }
+
   @Get(':id')
   @UseGuards(IsUserGuard)
   async getById(@Param('id') id: number) {
-    return this.usersService.getById(id);
+    return this.usersService.getById(Number(id));
   }
 
   @Put('update/:id')

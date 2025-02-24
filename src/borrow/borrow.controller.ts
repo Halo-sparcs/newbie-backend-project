@@ -24,6 +24,7 @@ export class BorrowController {
   @UseGuards(IsUserGuard) // anyone can borrow
   @Post('create')
   async createBorrow(@Request() req, @Body() body: createBorrowDto): Promise<Borrow> {
+    console.log(body);
     return this.borrowService.createBorrow(Number(req.user.user_id), body);
   }
 

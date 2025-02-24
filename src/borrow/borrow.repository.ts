@@ -9,12 +9,14 @@ export class BorrowRepository {
 
   async createBorrow(borrower_id: number, dto: createBorrowDto): Promise<Borrow> {
     const { post_id, owner_id, amount } = dto;
+    console.log(post_id, owner_id, post_id);
+    let ownerId = 6;
     return this.prisma.borrow.create({
       data: {
-        borrower_id,
-        post_id,
-        owner_id,
-        amount,
+        borrower_id: Number(borrower_id),
+        post_id: Number(post_id),
+        owner_id: ownerId,
+        amount: Number(amount),
       },
     });
   }

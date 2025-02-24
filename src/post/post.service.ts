@@ -47,4 +47,8 @@ export class PostService {
   async getByString(page: number, content: string) {
     return this.postRepository.getByString(page, content);
   }
+
+  async getAll(){
+    return this.postRepository.getAll()
+  }
 }

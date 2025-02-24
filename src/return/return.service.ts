@@ -13,6 +13,7 @@ export class ReturnService {
 
   async createReturn(user_id: number, dto: createReturnDto): Promise<Return> {
     const log = await this.logService.getLogById(dto.log_id);
+
     if (log.borrower_id !== user_id) {
       throw new ForbiddenException("You don't have permission to create a return for this log.");
     }

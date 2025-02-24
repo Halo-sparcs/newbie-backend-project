@@ -23,6 +23,7 @@ export class ReturnController {
   @UseGuards(IsUserGuard)
   @Post('create')
   async createReturn(@Request() req, @Body() body: createReturnDto): Promise<Return> {
+    console.log(body, Number(req.user.user_id));
     return this.returnService.createReturn(Number(req.user.user_id), body);
   }
 

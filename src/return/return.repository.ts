@@ -8,7 +8,9 @@ export class ReturnRepository {
   constructor(private readonly prisma: PrismaService) {}
 
   async createReturn(borrower_id: number, dto: createReturnDto): Promise<Return> {
-    const { log_id, owner_id } = dto;
+    let { log_id, owner_id } = dto;
+    log_id = Number(log_id);
+    owner_id = Number(owner_id);
     return this.prisma.return.create({
       data: {
         borrower_id,

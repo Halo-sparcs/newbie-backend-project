@@ -33,15 +33,23 @@ export class AuthController {
   ) {
     const Keys = await this.authService.login(body);
 
+    res.cookie('id', Keys['id'], {
+      httpOnly: false,
+      secure: false,
+      sameSite: 'lax',
+      path: '/'
+    });
     res.cookie('access_token', Keys['accessToken'], {
       httpOnly: true,
-      secure: true,
+      secure: false,
       sameSite: 'lax',
+      path: '/'
     });
     res.cookie('refresh_token', Keys['refreshToken'], {
       httpOnly: true,
-      secure: true,
+      secure: false,
       sameSite: 'lax',
+      path: '/'
     });
 
     const user = await this.userService.getByUserId(body.user_id);
@@ -50,7 +58,7 @@ export class AuthController {
 
   @Post('SignUp')
   async signup(@Body() body) {
-    logger.log(body);
+    console.log(body);
     return this.userService.createUser(body);
   }
 
@@ -61,6 +69,7 @@ export class AuthController {
     console.log('done');
     res.clearCookie('access_token');
     res.clearCookie('refresh_token');
+    res.clearCookie('id');
 
     res.json({ success: true });
   }

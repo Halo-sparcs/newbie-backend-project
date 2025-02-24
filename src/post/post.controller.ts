@@ -19,11 +19,20 @@ import { IsUserGuard } from '../auth/guards/isUser.guard';
 export class PostController {
   constructor(private readonly postService: PostService) {}
 
+  @Get('all')
+  async getAllPosts() {
+    return this.postService.getAll();
+  }
+  @Get('byId/:id')
+  async getById(@Param('id') id: number) {
+    return this.postService.getById(Number(id));
+  }
+
   @UseGuards(IsUserGuard)
   @Post('create')
   async createPost(@Req() req, @Body() body: createPostDto) {
     console.log(req.user.user_id);
-    return this.postService.createPost(req.user.user_id, body);
+    return this.postService.createPost(Number(req.user.user_id), body);
   }
 
   @UseGuards(IsUserGuard)
@@ -45,7 +54,7 @@ export class PostController {
   @Get('search/:name/:page')
   async searchPostByName(
     @Param('name') name: string,
-    @Param('page') page: number,) {
+    @Param('page') page: number) {
     return this.postService.getByString(Number(page), name);
   }
 }

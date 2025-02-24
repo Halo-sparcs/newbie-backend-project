@@ -7,16 +7,16 @@ export class S3Controller {
 
   @Get('upload-url')
   async getUploadUrl(@Query('fileType') fileType: string) {
-    return await this.s3Service.getUploadUrl(fileType);
+    return this.s3Service.getUploadUrl(fileType);
   }
 
   @Get('delete-url')
   async getDeleteUrl(@Query('key') key: string) {
-    return await this.s3Service.getDeleteUrl(key);
+    return this.s3Service.getDeleteUrl(key);
   }
 
   @Get('file-url')
   async getFileUrl(@Query('key') key: string) {
-    return await this.s3Service.getFileUrl(key);
+    return this.s3Service.getFileUrl(key);
   }
 }

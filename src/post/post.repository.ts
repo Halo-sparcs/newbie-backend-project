@@ -8,15 +8,16 @@ export class PostRepository {
   constructor(private readonly prisma: PrismaService) {}
 
   async createPost(user_id: number, data: createPostDto): Promise<Posts> {
-    return this.prisma.posts.create({
+    const res = await this.prisma.posts.create({
       data: {
         ownerId: user_id,
         title: data.title,
         content: data.content,
-        amount: data.amount,
+        amount: Number(data.amount),
         image: data.image,
       },
     });
+    return res;
   }
 
   async updatePost(id: number, data: updatePostDto): Promise<Posts> {
@@ -25,7 +26,7 @@ export class PostRepository {
       data: {
         title: data.title,
         content: data.content,
-        amount: data.amount,
+        amount: Number(data.amount),
       },
     });
   }
@@ -53,6 +54,7 @@ export class PostRepository {
 
   async getByString(page: number, content: string) {
     const skip = (page - 1) * 9;
+    console.log(skip);
     return this.prisma.posts.findMany({
       skip: skip,
       take: 9,
@@ -65,5 +67,9 @@ export class PostRepository {
         id: 'asc',
       },
     });
+  }
+
+  async getAll() {
+    return this.prisma.posts.findMany();
   }
 }

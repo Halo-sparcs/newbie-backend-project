@@ -42,7 +42,6 @@ export class UsersRepository {
         user_pwd: createUserDto.user_pwd,
         username: createUserDto.username,
         contact: createUserDto.contact,
-        place: createUserDto.place,
       },
     });
   }
@@ -50,9 +49,13 @@ export class UsersRepository {
   async updateUser(id: number, data: createUserDto) {
     return this.prisma.users.update({
       where: {
-        id: id,
+        id: Number(id),
       },
-      data,
+      data: {
+        user_id: data.user_id,
+        username: data.username,
+        contact: data.contact,
+      }
     });
   }
 
