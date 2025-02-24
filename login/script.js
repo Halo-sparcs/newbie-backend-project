@@ -19,17 +19,58 @@ document.addEventListener("DOMContentLoaded", function() {
       loginForm.style.display = 'none';
     });
   
-    // 폼 제출 이벤트 (실제 작업 시 백엔드와 연동)
+    // Login API
     loginForm.addEventListener('submit', function(e) {
       e.preventDefault();
-      alert('Logging in...');
-      // 여기에 로그인 처리 코드를 추가
+      const loginId = document.getElementById('login-id').value;
+      const loginPwd = document.getElementById('login-password').value;
+      
+      fetch('auth/login', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          loginId: loginId,
+          loginPwd: loginPwd
+        })
+      }).then(response => {
+        if (response.ok) {
+          alert('로그인 성공');
+          window.location.href = '/index.html';
+        } else {
+          alert('로그인 실패');
+        }
+      })
     });
   
     signupForm.addEventListener('submit', function(e) {
       e.preventDefault();
-      alert('Signing up...');
-      // 여기에 회원가입 처리 코드를 추가
+      
+      const signupId = document.getElementById('signup-id').value;
+      const signupPwd = document.getElementById('signup-password').value;
+      const signupName = document.getElementById('signup-name').value;
+      const signupContact = document.getElementById('signup-contact').value;
+
+      fetch('auth/SignUp', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          signupId: signupId,
+          signupPwd: signupPwd,
+          signupName: signupName,
+          signupContact: signupContact
+        })
+      }).then(response => {
+        if (response.ok) {
+          alert('회원가입 성공');
+          window.location.href = '/login.html';
+        } else {
+          alert('회원가입 실패');
+        }
+      })
     });
   });
   

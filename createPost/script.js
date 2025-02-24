@@ -46,20 +46,12 @@ document.addEventListener("DOMContentLoaded", function() {
         });
     });
   
-    // 모의 함수: presigned URL 요청 (실제 구현 시 fetch() 사용)
+    // request presignedurl
     function getPresignedUrl(fileName, fileType) {
-      return new Promise((resolve, reject) => {
-        // 실제 구현 시, 서버 API를 호출하여 presigned URL과 이미지 key를 받아옵니다.
-        setTimeout(() => {
-          resolve({
-            url: "https://your-s3-bucket.s3.amazonaws.com/" + fileName + "?presigned_params",
-            key: "https://your-s3-bucket.s3.amazonaws.com/" + fileName
-          });
-        }, 500);
-      });
+        return fetch('s3/upload-url/?fileType=' + fileType).then(response => response.json());
     }
   
-    // 모의 함수: 이미지 업로드 to S3 (실제 구현 시, fetch()의 PUT 요청)
+    // PUT Image
     function uploadImageToS3(presignedUrl, file) {
       return fetch(presignedUrl, {
         method: "PUT",
@@ -77,11 +69,13 @@ document.addEventListener("DOMContentLoaded", function() {
   
     // 모의 함수: create post API 호출 (실제 구현 시, 서버에 포스트 데이터를 전송)
     function createPost(postData) {
-      return new Promise((resolve, reject) => {
-        setTimeout(() => {
-          resolve({ success: true });
-        }, 500);
-      });
+      return fetch('post/create', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(postData)
+      })
     }
   });
   

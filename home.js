@@ -15,7 +15,7 @@ document.addEventListener("DOMContentLoaded", function() {
     const accessToken = getCookie("access_token");
     const authButtons = document.querySelector('.auth-buttons');
 
-    if (true || accessToken) {
+    if (accessToken) {
         // 로그인 상태라면 버튼을 "My Page"와 "Log Out"으로 교체
         authButtons.innerHTML = `
           <button class="btn" onclick="window.location.href='mypage/index.html'">My Page</button>
@@ -54,7 +54,18 @@ document.addEventListener("DOMContentLoaded", function() {
     });
 });
 
-function logout() {}
+function logout() {
+    fetch('/auth/logout')
+    .then(response => {
+        if (!response.ok) {
+            throw new Error('Logout failed');
+        }
+        return ;
+    })
+    .catch(error => {
+        console.error('error occured: ', error);
+    });
+}
 
 // // 로그아웃 함수: 쿠키에서 토큰 삭제 후 메인 페이지로 이동
 // function logout() {

@@ -45,34 +45,19 @@ document.addEventListener("DOMContentLoaded", function() {
       window.history.pushState({}, "", url);
     }
   
-    // 백엔드 API 호출 대신 모의 데이터를 반환하는 함수
     function fetchPosts(page, query, type) {
-      return new Promise((resolve) => {
-        let posts = [];
-        // 예시 조건: 검색어와 타입에 따라 페이지마다 다른 데이터를 반환한다고 가정
-        if (query !== "") {
-          if (page === 1) {
-            posts = [
-              { id: 1, title: "Post Title 1", owner: "User1", content: "Post 1의 간략한 내용...", amount: 100 },
-              { id: 2, title: "Post Title 2", owner: "User2", content: "Post 2의 간략한 내용...", amount: 150 },
-              { id: 3, title: "Post Title 3", owner: "User3", content: "Post 3의 간략한 내용...", amount: 200 },
-              { id: 4, title: "Post Title 4", owner: "User4", content: "Post 4의 간략한 내용...", amount: 250 },
-              { id: 5, title: "Post Title 5", owner: "User5", content: "Post 5의 간략한 내용...", amount: 300 },
-              { id: 6, title: "Post Title 6", owner: "User6", content: "Post 6의 간략한 내용...", amount: 350 },
-              { id: 7, title: "Post Title 7", owner: "User7", content: "Post 7의 간략한 내용...", amount: 400 },
-              { id: 8, title: "Post Title 8", owner: "User8", content: "Post 8의 간략한 내용...", amount: 450 },
-              { id: 9, title: "Post Title 9", owner: "User9", content: "Post 9의 간략한 내용...", amount: 500 }
-            ];
-          } else if (page === 2) {
-            // page 2: 9개 미만이면 마지막 페이지로 간주 (예: 2개)
-            posts = [
-              { id: 10, title: "Post Title 10", owner: "User10", content: "Post 10의 간략한 내용...", amount: 550 },
-              { id: 11, title: "Post Title 11", owner: "User11", content: "Post 11의 간략한 내용...", amount: 600 }
-            ];
-          }
-        }
-        resolve({ posts: posts });
-      });
+      if (query === "") {
+        return Promise.resolve([]);
+      }
+      if (type === "post") {
+        fetch('posts/search/' + query + '/' + page)
+        .then(response => {return response.json();})
+      }
+      if (type === "user") {
+        fetch('users/byname/' + query)
+        .then(response => {return response.json();})
+      }
+      return Promise.resolve([]);
     }
   
     // 게시글 및 placeholder를 렌더링하는 함수

@@ -1,121 +1,96 @@
 document.addEventListener("DOMContentLoaded", function() {
-    // 각 컬럼의 컨테이너 요소
     const borrowedLogsContainer = document.getElementById("borrowed-logs");
     const requestedLogsContainer = document.getElementById("requested-logs");
     const returnRequestedLogsContainer = document.getElementById("return-requested-logs");
   
-    // 무한 스크롤 상태 변수 및 마지막 로그 id 저장
     let borrowedLoading = false;
     let requestedLoading = false;
     let returnRequestedLoading = false;
     let borrowedLastId = null;
     let requestedLastId = null;
     let returnRequestedLastId = null;
+
+    function getCookie(name) {
+        const value = "; " + document.cookie;
+        const parts = value.split("; " + name + "=");
+        if (parts.length === 2) return parts.pop().split(";").shift();
+      }
+    
+      // Cookie -> id
+      const myUserId = getCookie("id");
   
     // --- 모의 API 함수 (실제 구현 시 fetch() 등으로 교체) ---
   
-    // 빌린 로그 9개씩 로드 (마지막 로그 id 기준)
-    function fetchBorrowedLogs(lastId) {
-      return new Promise((resolve) => {
-        setTimeout(() => {
-          const logs = [];
-          let startId = lastId ? parseInt(lastId) + 1 : 1;
-          // 예시: 최대 30개 로그
-          if (startId > 30) {
-            resolve([]);
-            return;
-          }
-          for (let i = 0; i < 9; i++) {
-            const id = startId + i;
-            if (id > 30) break;
-            logs.push({
-              logId: id,
-              postId: 100 + id,
-              amount: Math.floor(Math.random() * 5) + 1,
-              borrowedAt: new Date().toLocaleString()
-            });
-          }
-          resolve(logs);
-        }, 500);
-      });
+    // BorrowedLog
+    function fetchBorrowedLogs(myid, lastId) {
+      return fetch('borrow/getByBorrower/' + myid + '/'+ lastId)
+      .then(response => response.json())
+      .catch(error => console.log("error: ", error));
     }
   
-    // 요청된 로그 9개씩 로드
-    function fetchRequestedLogs(lastId) {
-      return new Promise((resolve) => {
-        setTimeout(() => {
-          const logs = [];
-          let startId = lastId ? parseInt(lastId) + 1 : 1;
-          if (startId > 30) {
-            resolve([]);
-            return;
-          }
-          for (let i = 0; i < 9; i++) {
-            const id = startId + i;
-            if (id > 30) break;
-            logs.push({
-              logId: id,
-              postId: 200 + id,
-              requester: "User" + (50 + id),
-              amount: Math.floor(Math.random() * 5) + 1
-            });
-          }
-          resolve(logs);
-        }, 500);
-      });
+    // RequestedLog
+    function fetchRequestedLogs(myid, lastId) {
+        return fetch('borrow/getByOwner/' + myid + '/' + lastId)
+        .then(response => response.json())
+        .catch(error => console.log("error: ", error));
     }
   
-    // 반납 신청된 로그 9개씩 로드
+    // ReturnRequestedLog
     function fetchReturnRequestedLogs(lastId) {
-      return new Promise((resolve) => {
-        setTimeout(() => {
-          const logs = [];
-          let startId = lastId ? parseInt(lastId) + 1 : 1;
-          // 예시: 최대 20개 로그
-          if (startId > 20) {
-            resolve([]);
-            return;
-          }
-          for (let i = 0; i < 9; i++) {
-            const id = startId + i;
-            if (id > 20) break;
-            logs.push({
-              logId: id,
-              borrower: "User" + (id + 10),
-              requestedAt: new Date().toLocaleString()
-            });
-          }
-          resolve(logs);
-        }, 500);
-      });
+        return fetch('return/returnView/' + myUserId + '/' + lastId)
+        .then(response => response.json())
+        .catch(error => console.log("error: ", error));
     }
   
-    // 반납 신청(빌린 로그)의 API (기존 함수)
-    function sendReturnRequest(logId) {
-      return new Promise((resolve) => {
-        setTimeout(() => { resolve({ success: true }); }, 300);
-      });
+    // ReturnRequest
+    function sendReturnRequest(ownerId, logId) {
+      return fetch('return/create', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          log_id: logId,
+          owner_id: ownerId
+        })
+      }).then(response => response.json())
+      .catch(error => console.log("error: ", error));
     }
   
-    // 요청 승인 API (중앙 컬럼)
+    // RequestOk
     function approveRequest(logId) {
-      return new Promise((resolve) => {
-        setTimeout(() => { resolve({ success: true }); }, 300);
-      });
+        return fetch('borrow/'+logId+'/true', {
+            method: 'DELETE',
+            headers: {
+                'Content-Type': 'application/json',
+            }
+        })
+        .then(response => response.json())
+        .catch(error => console.log("error: ", error));
     }
   
-    // 요청 거절 API (중앙 컬럼)
+    // RequestDeny
     function rejectRequest(logId) {
-      return new Promise((resolve) => {
-        setTimeout(() => { resolve({ success: true }); }, 300);
-      });
+        return fetch('borrow/'+logId+'/false', {
+            method: 'DELETE',
+            headers: {
+                'Content-Type': 'application/json',
+            }
+        })
+        .then(response => response.json())
+        .catch(error => console.log("error: ", error));
     }
   
-    // 반납 허가 API (오른쪽 컬럼)
+    // ReturnConfirmed
     function sendReturnApproval(logId) {
-      return new Promise((resolve) => {
-        setTimeout(() => { resolve({ success: true }); }, 300);
-      });
+        return fetch('return/'+logId+'/true', {
+            method: 'DELETE',
+            headers: {
+                'Content-Type': 'application/json',
+            }
+        })
+        .then(response => response.json())
+        .catch(error => console.log("error: ", error));
     }
   
     // --- 로그 항목 렌더링 함수 ---
@@ -127,12 +102,13 @@ document.addEventListener("DOMContentLoaded", function() {
         logItem.innerHTML = `
           <div class="log-info">
             <strong>Log ID:</strong> ${log.logId}<br>
+            <strong>Owner Id:</strong> ${log.ownerId}<br>
             <strong>Post ID:</strong> ${log.postId}<br>
             <strong>Amount:</strong> ${log.amount}<br>
             <strong>Borrowed At:</strong> ${log.borrowedAt}
           </div>
           <div class="log-buttons">
-            <button class="return-btn" data-logid="${log.logId}">반납신청</button>
+            <button class="return-btn" data-logid="${log.logId}" data-ownerId="${log.ownerId}">반납신청</button>
           </div>
         `;
         borrowedLogsContainer.appendChild(logItem);
@@ -186,7 +162,7 @@ document.addEventListener("DOMContentLoaded", function() {
       if (borrowedLoading) return;
       if (borrowedLogsContainer.scrollTop + borrowedLogsContainer.clientHeight >= borrowedLogsContainer.scrollHeight - 50) {
         borrowedLoading = true;
-        fetchBorrowedLogs(borrowedLastId).then(newLogs => {
+        fetchBorrowedLogs(myUserId, borrowedLastId).then(newLogs => {
           if (newLogs.length > 0) {
             appendBorrowedLogs(newLogs);
           }
@@ -238,8 +214,9 @@ document.addEventListener("DOMContentLoaded", function() {
     borrowedLogsContainer.addEventListener("click", function(e) {
       if (e.target && e.target.classList.contains("return-btn")) {
         const logId = e.target.getAttribute("data-logid");
+        const ownerId = e.target.getAttribute("data-ownerId");
         if (confirm("반납 신청하시겠습니까?")) {
-          sendReturnRequest(logId).then(response => {
+          sendReturnRequest(ownerId, logId).then(response => {
             if (response.success) {
               alert("반납 신청이 완료되었습니다.");
               // 필요 시 해당 로그 항목 업데이트 또는 제거

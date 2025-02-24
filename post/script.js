@@ -1,5 +1,4 @@
 document.addEventListener("DOMContentLoaded", function() {
-  // 쿠키에서 특정 이름의 값을 읽어오는 헬퍼 함수
   function getCookie(name) {
     const value = "; " + document.cookie;
     const parts = value.split("; " + name + "=");
@@ -7,7 +6,7 @@ document.addEventListener("DOMContentLoaded", function() {
     return null;
   }
 
-  // URL 쿼리 파라미터에서 id 추출
+  // URL Query Param -> id extract
   const params = new URLSearchParams(window.location.search);
   const postId = params.get("id");
 
@@ -16,20 +15,13 @@ document.addEventListener("DOMContentLoaded", function() {
     return;
   }
 
-  // 백엔드에서 post 상세 정보를 가져오는 모의 함수
+  // Post GetByID
   function fetchPostDetail(id) {
-    return new Promise((resolve, reject) => {
-      // 예시 데이터 (owner, title, image(AWS key), content, amount)
-      const postData = {
-        id: id,
-        owner: "User1", // 이 값과 쿠키에 저장된 내 id가 같으면 수정/삭제 가능
-        title: "Sample Post Title",
-        image: "https://via.placeholder.com/600x400?text=Post+Image", // 실제 AWS 이미지 URL 사용
-        content: "이 게시글의 내용입니다. 자세한 정보를 여기서 확인할 수 있습니다.",
-        amount: 100
-      };
-      resolve(postData);
-    });
+    return fetch('posts/byId/' + id).then(response => response.json());
+  }
+
+  function getImageUrl(key) {
+    return fetch('s3/file-url?key='+key).then(response => response.json().url);
   }
 
   // post 상세 정보를 페이지에 렌더링하는 함수 (편집 모드가 아닐 때)
@@ -44,7 +36,8 @@ document.addEventListener("DOMContentLoaded", function() {
     ownerEl.textContent = "Owner: " + post.owner;
 
     const imageEl = document.createElement("img");
-    imageEl.src = post.image;
+    link = getImageUrl(post.image);
+    imageEl.src = link;
     imageEl.alt = post.title;
 
     const contentEl = document.createElement("p");
@@ -133,7 +126,6 @@ document.addEventListener("DOMContentLoaded", function() {
     form.addEventListener("submit", function(e) {
       e.preventDefault();
       const updatedPost = {
-        id: post.id,
         title: document.getElementById("edit-title").value,
         image: document.getElementById("edit-image").value,
         content: document.getElementById("edit-content").value,
@@ -149,7 +141,7 @@ document.addEventListener("DOMContentLoaded", function() {
             fetchPostDetail(post.id)
               .then(newPost => {
                 renderPostDetail(newPost);
-                const myUserId = getCookie("user_id");
+                const myUserId = getCookie("id");
                 if (myUserId === newPost.owner) {
                   addEditControls(newPost);
                 }
@@ -167,37 +159,52 @@ document.addEventListener("DOMContentLoaded", function() {
     // 취소 버튼 처리: 편집 모드 취소 시 원래 상태로 복구
     document.getElementById("cancel-edit").addEventListener("click", function() {
       renderPostDetail(post);
-      const myUserId = getCookie("user_id");
+      const myUserId = getCookie("id");
       if (myUserId === post.owner) {
         addEditControls(post);
       }
     });
   }
 
-  // 대여 요청 API를 호출하는 모의 함수
-  function sendRentalRequest(postId, rentalAmount) {
-    return new Promise((resolve, reject) => {
-      setTimeout(() => {
-        resolve({ success: true });
-      }, 500);
-    });
+  // 대여 요청 API를 호출
+  function sendRentalRequest(postId, postOwner, rentalAmount) {
+    return fetch("borrow/create", {
+      method: "POST",
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        post_id: postId,
+        owner_id: postOwner,
+        amount: rentalAmount,
+    })
+    }).then(response => response.json());
   }
 
-  // 모의 updatePost 함수 (실제 구현 시 API 호출)
+  // updatePost  API 호출
   function updatePost(updatedPost) {
-    return new Promise((resolve, reject) => {
-      setTimeout(() => {
-        resolve({ success: true });
-      }, 500);
-    });
+    return fetch("posts/update/" + id, {
+      method: "PUT",
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(updatedPost)
+    }).then(response => response.json());
   }
 
-  // 모의 deletePost 함수 (실제 구현 시 API 호출)
+  // deletePost API 호출
   function deletePost(postId) {
-    return new Promise((resolve, reject) => {
-      setTimeout(() => {
-        resolve({ success: true });
-      }, 500);
+    return fetch("posts/delete/" + postId, {
+      method: "DELETE",
+      headers: {
+        "Content-Type": "application/json",
+      }
+    }).then(response => {
+      if (!response.ok) {
+        throw new Error("게시글 삭제 실패");
+      }
+      console.log("삭제 성공");
+      return response.json();
     });
   }
 
@@ -206,7 +213,7 @@ document.addEventListener("DOMContentLoaded", function() {
     .then(postData => {
       renderPostDetail(postData);
       // 쿠키에 저장된 내 id와 post.owner가 동일하면 수정/삭제 버튼 추가
-      const myUserId = getCookie("user_id");
+      const myUserId = getCookie("id");
       if (myUserId && myUserId === postData.owner) {
         addEditControls(postData);
       }
@@ -226,7 +233,7 @@ document.addEventListener("DOMContentLoaded", function() {
       return;
     }
 
-    sendRentalRequest(postId, rentalAmount)
+    sendRentalRequest(postId, post.owner, rentalAmount)
       .then(response => {
         if (response.success) {
           alert("대여 요청이 성공적으로 전송되었습니다.");
